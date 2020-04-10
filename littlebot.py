@@ -13,7 +13,7 @@ from opencv_apps.msg import Point2D
 
 class LittleBot:
      def __init__(self, script_path):
-         rospy.init_node('talkbot')
+         rospy.init_node('littlebot')
 
          rospy.on_shutdown(self.cleanup)
 
@@ -40,20 +40,12 @@ class LittleBot:
          self.face_y=0
          # Subscribe to the face_detection output
          rospy.Subscriber('/face_detection/faces', FaceArrayStamped, self.face_back)
-  
-         # the center of blue object
-         self.blue_x = 0
-         self.blue_width = 0
-         # Subscribe to the blue_tracting output
-         rospy.Subscriber('/camshift/track_box', RotatedRectStamped, self.blue_back)
+ 
 
          #Publish to the take_photo topic to use take_photo node
          self.take_photo = rospy.Publisher("/take_photo", String, queue_size=10)
 
-     def blue_back(self,blue_data):
-          self.blue_x = blue_data.rect.center.x 
-          self.blue_width = blue_data.rect.size.width
-             
+     
      def face_back(self,face_data):
          pos = face_data.faces
          if pos:
@@ -82,22 +74,22 @@ class LittleBot:
              #rospy.sleep(1)
              while(True):
                  if self.face_x<240 and self.face_x>0
-                         rospy.loginfo("Please stand a little to the left.")
-                         self.soundhandle.say("Please stand a little to the left.", volume=0.1)
+                     rospy.loginfo("Please stand a little to the left.")
+                     self.soundhandle.say("Please stand a little to the left.", volume=0.1)
                      self.face_x=0 
                      self.face_y=0
                      rospy.sleep(1)
                  elif self.face_x>420:
-                         rospy.loginfo("Please stand a little to the right.")
-                         self.soundhandle.say("Please stand a little to the right.", volume=0.1)
+                     rospy.loginfo("Please stand a little to the right.")
+                     self.soundhandle.say("Please stand a little to the right.", volume=0.1)
                      self.face_x=0
                      self.face_y=0
                      rospy.sleep(1)
                  elif self.face_x>=240 and self.face_x<=420:
                      
-                         rospy.loginfo("OK, that is good.")
-                         self.soundhandle.say("OK, thst is good.", volume=0.1)
-                         break
+                      rospy.loginfo("OK, that is good.")
+                      self.soundhandle.say("OK, thst is good.", volume=0.1)
+                       
                  elif self.face_x==0 or self.face_y==0:
                      rospy.loginfo("I can't catch your face, please stand and face to me.")
                      self.soundhandle.say("I can't catch your face, please stand and face to me.", volume=0.1)
